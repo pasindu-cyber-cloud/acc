@@ -1,0 +1,117 @@
+# =============================================================================
+# AccuScan default configuration
+# All values are overridable via .env, CLI flags, or a user config file.
+# These are RESEARCH DEFAULTS and must be validated via replay/backtesting.
+# =============================================================================
+
+scanner:
+  # Rolling windows maintained per symbol (ticks).
+  windows: [25, 50, 100, 300, 1000]
+  primary_window: 100          # window used for the headline screening
+  seed_history_count: 1000     # ticks_history count requested on seed
+  max_symbols: 24              # safety cap on concurrent subscriptions
+  rank_interval_ms: 500        # how often the ranking table is recomputed
+  # Only symbols whose contracts_for includes ACCU are eligible.
+  require_accu_contract: true
+  # Symbol family prefixes considered "synthetic volatility" markets.
+  preferred_families: ["R_", "1HZ", "BOOM", "CRASH", "JD", "stpRNG"]
+
+digits:
+  danger_digits: [0, 1, 5]     # CONFIGURABLE HYPOTHESIS — validate via backtest
+  cluster_distance: 3          # max gap (ticks) for two danger digits to "cluster"
+  burst_threshold: 3           # >= N danger digits within cluster_distance window = burst
+  drought_threshold: 40        # ticks without a danger digit = drought (overly-calm flag)
+  entropy_floor: 2.6           # bits; below this digit distribution is "too structured"
+  # Digit VETO sensitivity: veto only when the danger-digit count exceeds the
+  # binomial expectation by this many sigma (statistical significance, so normal
+  # random clustering of a ~uniform digit does NOT constantly trip the veto).
+  danger_z_short: 3.0          # on the 25-tick window
+  danger_z_primary: 3.0        # on the 100-tick window (also requires high clustering)
+
+movement:
+  # Movement classified relative to the symbol's pip/quote precision.
+  zero_move_eps: 1.0e-9        # |delta| below this counts as a 0-move
+  unit_move_pips: 1            # "1-unit" move size in pips
+  large_move_pips: 5           # ">=5-unit" move threshold in pips
+  jump_sigma: 4.0              # delta beyond N*rolling_sigma counts as a jump
+  adverse_lookback: 100        # window for max adverse movement
+
+stability:
+  # Target reference scales for normalising stability sub-metrics (per family,
+  # learned/overridable). These are sane synthetic-index starting points.
+  ref_abs_move_pips: 2.0       # "calm" average absolute move
+  ref_range_pips: 30.0         # "calm" 100-tick range
+  ref_micro_vol_pips: 1.5
+  smoothness_halflife: 25
+
+scoring:
+  # Market Quality Score weights (must sum to 1.0). See docs/SCORING.md.
+  weights:
+    digit_clean_100: 0.15
+    digit_clean_25:  0.10
+    movement_risk:   0.15
+    accu_stability:  0.20
+    jump_safety:     0.15
+    trend_smooth:    0.10
+    risk_fit:        0.05
+    deterioration_resist: 0.05
+    data_quality:    0.05
+  # Status thresholds on the Market Quality Score (0-100).
+  thresholds:
+    ready: 72
+    watch: 55
+    high_risk: 0          # anything below 'watch' is HIGH_RISK
+  # Minimum readiness persistence (consecutive ticks above 'ready') before a
+  # symbol can be acted on. Prevents acting on a 1-tick spike.
+  min_ready_persistence_ticks: 15
+
+deterioration:
+  cusum_k: 0.5                 # slack (in baseline sigmas)
+  cusum_h: 5.0                 # decision threshold (in baseline sigmas)
+  ewma_lambda: 0.06            # volatility EWMA smoothing
+  zscore_window: 50
+  zscore_warn: 2.5
+  zscore_crit: 3.5
+  score_drop_warn: 10          # MQS drop from entry baseline -> WARNING
+  score_drop_crit: 20          # MQS drop from entry baseline -> CRITICAL
+  latency_warn_ms: 1500
+  latency_crit_ms: 4000
+  staleness_warn_ms: 3000      # no tick for this long -> WARNING
+
+trade_health:
+  weights:
+    mqs_delta:       0.30
+    stability_delta: 0.20
+    volatility_delta:0.15
+    jump_delta:      0.15
+    trend_delta:     0.05
+    danger_increase: 0.05
+    data_quality:    0.05
+    time_in_trade:   0.05
+  labels:
+    healthy: 80
+    watch_closely: 65
+    deteriorating: 45
+    critical: 25
+    # below 'critical' -> EXIT_IF_POSSIBLE
+
+growth_governor:
+  # Allowed growth rates per Deriv ACCU spec (validated against docs).
+  allowed_rates: [0.01, 0.02, 0.03, 0.04, 0.05]
+  # Map stability/jump conditions to a recommended growth rate.
+  # Higher growth rate => tighter implied barrier => more jump-sensitive.
+  base_rate: 0.01
+
+execution:
+  default_mode: analytics      # analytics | paper | demo | live
+  paper_start_balance: 1000.0
+  stake_per_trade: 1.0
+  # Dual-path take-profit handling (see docs/API_FLOW.md).
+  take_profit_mode: proposal   # proposal | contract_update | both
+  default_take_profit_pct: 0.20  # 20% of stake target by default
+
+logging:
+  structured: true
+  persist_scores: true
+  persist_alerts: true
+  daily_summary: true

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>AccuScan — Accumulator Market Intelligence</title>
+<style>
+  :root{
+    --bg:#0c1018; --panel:#141b27; --panel2:#1b2435; --ink:#e6edf3; --muted:#8b98ab;
+    --ok:#2ecc71; --warn:#f1c40f; --crit:#e74c3c; --accent:#4aa3ff; --line:#243044;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--bg);color:var(--ink)}
+  header{display:flex;align-items:center;gap:14px;padding:12px 18px;background:var(--panel);border-bottom:1px solid var(--line)}
+  header h1{font-size:16px;margin:0;letter-spacing:.5px}
+  .badge{padding:3px 9px;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase}
+  .badge.analytics{background:#2c3e50}.badge.paper{background:#1f6f43}.badge.demo{background:#9a6b00}.badge.live{background:#7a1c1c}
+  .muted{color:var(--muted)}
+  main{padding:16px;display:grid;gap:16px;grid-template-columns:1fr;max-width:1400px;margin:0 auto}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .card h3{margin:0 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .card .big{font-size:22px;font-weight:700}
+  table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:10px;overflow:hidden}
+  th,td{padding:8px 10px;text-align:right;font-size:13px;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--muted);font-weight:600;text-transform:uppercase;font-size:11px}
+  tr.ready td:first-child{border-left:3px solid var(--ok)}
+  tr.watch td:first-child{border-left:3px solid var(--warn)}
+  tr.high_risk td:first-child{border-left:3px solid var(--crit)}
+  .pill{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+  .pill.ready{background:rgba(46,204,113,.18);color:var(--ok)}
+  .pill.watch{background:rgba(241,196,15,.18);color:var(--warn)}
+  .pill.high_risk{background:rgba(231,76,60,.18);color:var(--crit)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .panel h2{font-size:13px;margin:0 0 10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .alert{padding:6px 10px;border-radius:6px;margin-bottom:6px;font-size:12px;border-left:3px solid var(--line)}
+  .alert.INFO{border-color:var(--accent)}.alert.WARNING{border-color:var(--warn)}.alert.CRITICAL{border-color:var(--crit);background:rgba(231,76,60,.08)}
+  .gaugewrap{display:flex;align-items:center;gap:14px}
+  svg{display:block}
+  .legend{font-size:11px;color:var(--muted)}
+  footer{padding:10px 18px;color:var(--muted);font-size:11px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <h1>◈ AccuScan</h1>
+  <span class="muted">Accumulator Market Intelligence</span>
+  <span id="modeBadge" class="badge analytics">analytics</span>
+  <span id="profile" class="muted"></span>
+  <span style="margin-left:auto" id="clock" class="muted"></span>
+</header>
+<main>
+  <div class="cards">
+    <div class="card"><h3>Best Market</h3><div class="big" id="best">—</div><div class="muted" id="bestSub"></div></div>
+    <div class="card"><h3>Second Best</h3><div class="big" id="second">—</div></div>
+    <div class="card"><h3>Suggested Growth</h3><div class="big" id="growth">—</div><div class="muted" id="confidence"></div></div>
+    <div class="card"><h3>Avoid</h3><div class="big" id="avoidCount" style="color:var(--crit)">0</div><div class="muted" id="avoidList"></div></div>
+  </div>
+
+  <div class="panel">
+    <h2>Live Market Ranking</h2>
+    <table id="rankTable">
+      <thead><tr>
+        <th>Symbol</th><th>MQS</th><th>Status</th><th>Stability</th><th>Danger#</th><th>Danger%</th>
+        <th>MoveRisk</th><th>JumpRisk</th><th>Trend</th><th>Deterior.</th><th>DataQ</th>
+        <th>Growth</th><th>Conf.</th><th>Health</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="grid3">
+    <div class="panel"><h2>Deterioration Meter (best)</h2><div class="gaugewrap"><div id="gauge"></div><div><div id="health" class="big">—</div><div class="muted" id="detReasons"></div></div></div></div>
+    <div class="panel"><h2>Digit Distribution (best, 100t)</h2><div id="digitChart"></div><div class="legend">danger digits highlighted</div></div>
+    <div class="panel"><h2>Movement-Size Distribution (best)</h2><div id="moveChart"></div><div class="legend">zero / small / large per-tick moves</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel"><h2>MQS Trend (best)</h2><div id="trendChart"></div></div>
+    <div class="panel"><h2>Live Alerts</h2><div id="alerts"></div></div>
+  </div>
+
+  <div class="panel" id="paperPanel" style="display:none">
+    <h2>Paper Trading</h2>
+    <div id="paper" class="legend"></div>
+  </div>
+</main>
+<footer>Research / risk-monitoring tool. No guarantee of profit. Trading involves risk of loss. See docs/DISCLAIMER.md.</footer>
+
+<script>
+const DANGER = new Set(["0","1","5"]);  // updated from snapshot if provided
+let trend = [];
+const $ = id => document.getElementById(id);
+
+function color(status){return status==="READY"?"var(--ok)":status==="WATCH"?"var(--warn)":"var(--crit)";}
+
+function bars(data, opts){
+  // data: [{label, value, danger?}] -> simple SVG bar chart
+  const w=opts.w||300,h=opts.h||120,pad=18;
+  const max=Math.max(...data.map(d=>d.value),1e-9);
+  const bw=(w-pad*2)/data.length;
+  let svg=`<svg width="${w}" height="${h}">`;
+  data.forEach((d,i)=>{
+    const bh=(h-pad*2)*(d.value/max);
+    const x=pad+i*bw, y=h-pad-bh;
+    const col=d.danger?"var(--crit)":(opts.color||"var(--accent)");
+    svg+=`<rect x="${x+2}" y="${y}" width="${bw-4}" height="${bh}" fill="${col}" rx="2"/>`;
+    svg+=`<text x="${x+bw/2}" y="${h-5}" fill="var(--muted)" font-size="10" text-anchor="middle">${d.label}</text>`;
+  });
+  svg+=`</svg>`;return svg;
+}
+
+function gauge(value){
+  // semicircle gauge 0..100, higher = worse (deterioration)
+  const w=160,h=100,cx=80,cy=90,r=70;
+  const ang=Math.PI*(1-value/100);
+  const x=cx+r*Math.cos(ang), y=cy-r*Math.sin(ang);
+  const col=value<20?"var(--ok)":value<60?"var(--warn)":"var(--crit)";
+  return `<svg width="${w}" height="${h}">
+    <path d="M ${cx-r} ${cy} A ${r} ${r} 0 0 1 ${cx+r} ${cy}" stroke="var(--line)" stroke-width="12" fill="none"/>
+    <path d="M ${cx-r} ${cy} A ${r} ${r} 0 0 1 ${x} ${y}" stroke="${col}" stroke-width="12" fill="none"/>
+    <text x="${cx}" y="${cy-12}" fill="${col}" font-size="22" font-weight="700" text-anchor="middle">${value.toFixed(0)}</text>
+  </svg>`;
+}
+
+function line(series, opts){
+  const w=opts.w||560,h=opts.h||140,pad=24;
+  if(series.length<2) return `<svg width="${w}" height="${h}"></svg>`;
+  const min=Math.min(...series), max=Math.max(...series);
+  const rng=(max-min)||1;
+  const step=(w-pad*2)/(series.length-1);
+  let d="";
+  series.forEach((v,i)=>{const x=pad+i*step,y=h-pad-(h-pad*2)*((v-min)/rng);d+=(i?"L":"M")+x+" "+y+" ";});
+  // threshold lines for 72 (ready) within range
+  return `<svg width="${w}" height="${h}">
+    <path d="${d}" stroke="var(--accent)" stroke-width="2" fill="none"/>
+    <text x="4" y="14" fill="var(--muted)" font-size="10">max ${max.toFixed(1)}</text>
+    <text x="4" y="${h-6}" fill="var(--muted)" font-size="10">min ${min.toFixed(1)}</text>
+  </svg>`;
+}
+
+async function poll(){
+  let snap;
+  try{ snap = await (await fetch("/api/snapshot")).json(); }
+  catch(e){ return; }
+  const mode=snap.mode||"analytics";
+  const badge=$("modeBadge"); badge.className="badge "+mode; badge.textContent=mode;
+  $("profile").textContent = snap.risk_profile ? "profile: "+snap.risk_profile : "";
+  $("clock").textContent = new Date((snap.ts||Date.now()/1000)*1000).toLocaleTimeString();
+
+  const ranking = snap.ranking||[];
+  const best = snap.best_market, second = snap.second_best;
+  $("best").textContent = best||"—";
+  $("second").textContent = second||"—";
+  const bestRow = ranking.find(r=>r.symbol===best);
+  $("bestSub").textContent = bestRow? `MQS ${bestRow.mqs} · stab ${bestRow.stability}`:"";
+  $("growth").textContent = bestRow? (bestRow.suggested_growth_rate*100).toFixed(0)+"%":"—";
+  $("confidence").textContent = bestRow? "confidence "+(bestRow.confidence*100).toFixed(0)+"%":"";
+  const avoid = snap.avoid_list||[];
+  $("avoidCount").textContent = avoid.length;
+  $("avoidList").textContent = avoid.slice(0,6).join(", ");
+
+  // ranking table
+  const tb=$("rankTable").querySelector("tbody"); tb.innerHTML="";
+  ranking.forEach(r=>{
+    const tr=document.createElement("tr"); tr.className=r.status.toLowerCase();
+    tr.innerHTML=`<td>${r.symbol}</td><td>${r.mqs}</td>
+      <td><span class="pill ${r.status.toLowerCase()}">${r.status}</span></td>
+      <td>${r.stability}</td><td>${r.danger_count}</td><td>${r.danger_pct}</td>
+      <td>${r.movement_risk}</td><td>${r.jump_risk}</td><td>${r.trend_smooth}</td>
+      <td>${(r.deterioration||0).toFixed(0)}</td><td>${r.data_quality}</td>
+      <td>${(r.suggested_growth_rate*100).toFixed(0)}%</td><td>${(r.confidence*100).toFixed(0)}%</td>
+      <td>${r.health||"-"}</td>`;
+    tb.appendChild(tr);
+  });
+
+  // best detail
+  const det=(snap.detail||{})[best];
+  if(det){
+    const dscore = det.deterioration||0;
+    $("gauge").innerHTML = gauge(dscore);
+    $("health").textContent = bestRow? (bestRow.health||"—"):"—";
+    $("detReasons").textContent = (det.deterioration_reasons||[]).join(", ");
+    // digit histogram
+    const dd=det.digit_distribution||{};
+    const digitData=[...Array(10).keys()].map(k=>({label:k, value:(dd[String(k)]||0)*100, danger:DANGER.has(String(k))}));
+    $("digitChart").innerHTML = bars(digitData,{w:300,h:130});
+    // movement buckets
+    const mb=det.move_buckets||{};
+    $("moveChart").innerHTML = bars([
+      {label:"zero",value:mb.zero||0},{label:"small",value:mb.small||0},{label:"large",value:mb.large||0,danger:true}
+    ],{w:300,h:130});
+  }
+
+  // trend
+  if(bestRow){ trend.push(bestRow.mqs); if(trend.length>120) trend.shift(); }
+  $("trendChart").innerHTML = line(trend,{w:560,h:140});
+
+  // alerts
+  const al=$("alerts"); al.innerHTML="";
+  (snap.alerts||[]).slice().reverse().slice(0,12).forEach(a=>{
+    const d=document.createElement("div"); d.className="alert "+a.level;
+    d.innerHTML=`<b>${a.level}</b> · ${a.symbol} · ${a.reason}<br><span class="muted">${a.message||""}</span>`;
+    al.appendChild(d);
+  });
+
+  // paper
+  if(snap.paper){ $("paperPanel").style.display="block";
+    const p=snap.paper;
+    $("paper").innerHTML=`balance <b>${p.balance}</b> · net <b style="color:${p.net_pnl>=0?'var(--ok)':'var(--crit)'}">${p.net_pnl}</b>
+      · trades ${p.trades} · win-rate ${(p.win_rate*100).toFixed(0)}% · max drawdown ${p.max_drawdown}`;
+  }
+}
+poll(); setInterval(poll, 1000);
+</script>
+</body>
+</html>
