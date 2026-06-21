@@ -62,5 +62,7 @@ honest Protection Health page that does not impersonate Microsoft Defender.
 
 ## Status
 
-Built incrementally. See `docs/ARCHITECTURE.md` for the design and the porting
-map from the Python prototype.
+Feature-complete (engine, ML, GUI, service, reports, assistant, installer, docs).
+Build on Windows with `pwsh build.ps1` (see `docs/BUILD.md`). See
+`docs/ARCHITECTURE.md` for the design and the porting map from the Python
+prototype, and `docs/INSTALLER.md` for packaging and code-signing.
