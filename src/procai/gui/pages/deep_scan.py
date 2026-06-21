@@ -54,7 +54,7 @@ class DeepScanPage(BasePage):
 
         def work():
             if simulate:
-                from ...core import simulation
+                import procai.core.simulation as simulation
                 results = self.app.engine.scan_once(simulation.generate(),
                                                     enrich_reputation=False)
             else:

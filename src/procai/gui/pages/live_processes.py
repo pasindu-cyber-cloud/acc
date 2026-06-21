@@ -94,7 +94,7 @@ class LiveProcessesPage(BasePage):
         self._refresh()
 
     def _simulate(self) -> None:
-        from ...core import simulation
+        import procai.core.simulation as simulation
 
         snaps = simulation.generate()
         self._results = self.app.engine.scan_once(snaps, enrich_reputation=False)
