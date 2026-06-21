@@ -14,13 +14,16 @@ installer/Output/
 *.spec.bak
 
 # ProcAI local data (never commit user telemetry/models/reports)
+# NOTE: /reports/ and /logs/ are anchored with a leading slash so they only match
+# the runtime data dirs at the repo root and do NOT match the source package
+# src/procai/reports/ (which must be committed).
 *.db
 *.db-wal
 *.db-shm
 *.joblib
 /data/
-reports/
-logs/
+/reports/
+/logs/
 
 # Tooling
 .pytest_cache/
