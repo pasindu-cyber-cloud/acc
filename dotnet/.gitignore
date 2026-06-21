@@ -1,0 +1,31 @@
+# .NET build artifacts
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+publish/
+*.user
+*.suo
+*.userprefs
+.vs/
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# ProcAI runtime data must never be committed (anchored to this dir's root only)
+/runtime-data/
+*.db
+*.db-wal
+*.db-shm
+
+# OS
+.DS_Store
+Thumbs.db
