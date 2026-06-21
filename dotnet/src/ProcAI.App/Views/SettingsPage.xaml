@@ -1,0 +1,149 @@
+<Page x:Class="ProcAI.App.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <Page.Resources>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="#1A222C" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+        <Style x:Key="Sec" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Settings" FontSize="24" FontWeight="Bold" Margin="0,0,0,12" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Monitoring" Style="{StaticResource Sec}" />
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <TextBlock Text="Sensitivity profile" Width="220" VerticalAlignment="Center" />
+                            <ComboBox x:Name="Sensitivity" Width="200">
+                                <ComboBoxItem Content="Low" />
+                                <ComboBoxItem Content="Balanced" />
+                                <ComboBoxItem Content="Strict" />
+                                <ComboBoxItem Content="Research" />
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <TextBlock Text="Scan interval (seconds)" Width="220" VerticalAlignment="Center" />
+                            <Slider x:Name="ScanInterval" Minimum="1" Maximum="30" Width="220" VerticalAlignment="Center" />
+                            <TextBlock x:Name="ScanIntervalLabel" Width="48" VerticalAlignment="Center" Margin="8,0" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="LearningMode" Content="Learning mode (observe before getting strict)" Margin="0,4" />
+                        <ui:ToggleSwitch x:Name="StartWithWindows" Content="Start with Windows (visible startup entry)" Margin="0,4" />
+                        <ui:ToggleSwitch x:Name="TrayMin" Content="Minimise to system tray on close" Margin="0,4" />
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Detection &amp; machine learning" Style="{StaticResource Sec}" />
+                        <ui:ToggleSwitch x:Name="EnableMl" Content="Use machine-learning model in the hybrid engine" Margin="0,4" />
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <TextBlock Text="Preferred model" Width="220" VerticalAlignment="Center" />
+                            <ComboBox x:Name="Model" Width="200">
+                                <ComboBoxItem Content="random_forest" />
+                                <ComboBoxItem Content="decision_tree" />
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                            <ui:Button x:Name="TrainButton" Content="Train model on synthetic data" Click="OnTrain" />
+                            <TextBlock x:Name="TrainStatus" VerticalAlignment="Center" Margin="8,0" Opacity="0.7" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Notifications" Style="{StaticResource Sec}" />
+                        <ui:ToggleSwitch x:Name="Notifications" Content="Desktop notifications" Margin="0,4" />
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <TextBlock Text="Notify at minimum severity" Width="220" VerticalAlignment="Center" />
+                            <ComboBox x:Name="MinSeverity" Width="160">
+                                <ComboBoxItem Content="info" />
+                                <ComboBoxItem Content="low" />
+                                <ComboBoxItem Content="medium" />
+                                <ComboBoxItem Content="high" />
+                                <ComboBoxItem Content="critical" />
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Privacy &amp; AI assistant" Style="{StaticResource Sec}" />
+                        <ui:ToggleSwitch x:Name="PrivacyFirst" Content="Privacy-first mode (block all cloud AI)" Margin="0,4" />
+                        <ui:ToggleSwitch x:Name="AiEnabled" Content="Enable AI assistant chat (off by default)" Margin="0,4" />
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <TextBlock Text="AI backend" Width="220" VerticalAlignment="Center" />
+                            <ComboBox x:Name="AiBackend" Width="160">
+                                <ComboBoxItem Content="offline" />
+                                <ComboBoxItem Content="ollama" />
+                                <ComboBoxItem Content="gemini" />
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <TextBlock Text="Ollama host" Width="220" VerticalAlignment="Center" />
+                            <ui:TextBox x:Name="OllamaHost" Width="260" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <TextBlock Text="Ollama model" Width="220" VerticalAlignment="Center" />
+                            <ui:TextBox x:Name="OllamaModel" Width="200" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <TextBlock Text="Gemini API key" Width="220" VerticalAlignment="Center" />
+                            <ui:PasswordBox x:Name="GeminiKey" Width="320" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Allowlist &amp; blocklist" Style="{StaticResource Sec}" />
+                        <TextBlock Text="Allowlist (trusted, alerts suppressed) - one per line" Opacity="0.7" />
+                        <TextBox x:Name="AllowBox" Height="80" AcceptsReturn="True" TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto" Margin="0,4" Background="#222C38" />
+                        <TextBlock Text="Blocklist (always alert) - one per line" Opacity="0.7" Margin="0,8,0,0" />
+                        <TextBox x:Name="BlockBox" Height="80" AcceptsReturn="True" TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto" Margin="0,4" Background="#222C38" />
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Data retention" Style="{StaticResource Sec}" />
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <TextBlock Text="Process history retention (days)" Width="260" VerticalAlignment="Center" />
+                            <ui:TextBox x:Name="HistDays" Width="80" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <TextBlock Text="Log/alert retention (days)" Width="260" VerticalAlignment="Center" />
+                            <ui:TextBox x:Name="LogDays" Width="80" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="2" Margin="0,12,0,0">
+            <TextBlock x:Name="SaveStatus" Foreground="#2ECC71" VerticalAlignment="Center" />
+            <ui:Button Content="Save settings" Appearance="Primary" HorizontalAlignment="Right" Click="OnSave" />
+        </Grid>
+    </Grid>
+</Page>

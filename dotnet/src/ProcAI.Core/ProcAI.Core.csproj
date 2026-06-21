@@ -24,6 +24,9 @@
     <!-- WMI for command line / parent process / executable path enrichment. -->
     <PackageReference Include="System.Management" Version="8.0.0" />
 
+    <!-- PDF report generation. -->
+    <PackageReference Include="QuestPDF" Version="2024.10.2" />
+
     <!-- JSON settings + structured logging. -->
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
   </ItemGroup>

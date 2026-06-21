@@ -1,0 +1,102 @@
+<Page x:Class="ProcAI.App.Views.OverviewPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <Page.Resources>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="#1A222C" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="6" />
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <TextBlock Text="Overview" FontSize="24" FontWeight="Bold" Margin="0,0,0,16" />
+
+            <UniformGrid Columns="4">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="PROTECTION" Opacity="0.6" FontSize="11" />
+                        <TextBlock x:Name="ProtectionValue" Text="-" FontSize="26" FontWeight="Bold" />
+                        <TextBlock x:Name="ProtectionSub" Opacity="0.6" FontSize="11" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="PROCESSES SCANNED" Opacity="0.6" FontSize="11" />
+                        <TextBlock x:Name="ScannedValue" Text="0" FontSize="26" FontWeight="Bold" />
+                        <TextBlock Text="this scan" Opacity="0.6" FontSize="11" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="SUSPICIOUS (24H)" Opacity="0.6" FontSize="11" />
+                        <TextBlock x:Name="AlertsValue" Text="0" FontSize="26" FontWeight="Bold" />
+                        <TextBlock x:Name="AlertsSub" Opacity="0.6" FontSize="11" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="MODEL" Opacity="0.6" FontSize="11" />
+                        <TextBlock x:Name="ModelValue" Text="-" FontSize="26" FontWeight="Bold" />
+                        <TextBlock x:Name="ModelSub" Opacity="0.6" FontSize="11" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <UniformGrid Columns="3" Margin="0,4,0,0">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="SYSTEM MEMORY" Opacity="0.6" FontSize="11" />
+                        <TextBlock x:Name="MemValue" Text="-" FontSize="26" FontWeight="Bold" />
+                        <TextBlock x:Name="MemSub" Opacity="0.6" FontSize="11" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="LEARNING MODE" Opacity="0.6" FontSize="11" />
+                        <TextBlock x:Name="LearnValue" Text="-" FontSize="26" FontWeight="Bold" />
+                        <TextBlock x:Name="LearnSub" Opacity="0.6" FontSize="11" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="BASELINES LEARNED" Opacity="0.6" FontSize="11" />
+                        <TextBlock x:Name="BaselineValue" Text="0" FontSize="26" FontWeight="Bold" />
+                        <TextBlock Text="programs" Opacity="0.6" FontSize="11" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <Border Style="{StaticResource Card}" Margin="6,12,6,6">
+                <StackPanel>
+                    <TextBlock Text="Recent Alerts" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" />
+                    <ItemsControl x:Name="RecentAlerts">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#222C38" CornerRadius="8" Padding="10" Margin="0,3">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="{Binding SeverityBrush}" CornerRadius="6"
+                                                Padding="8,2" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Severity}" Foreground="#0F1419" FontSize="11" />
+                                        </Border>
+                                        <TextBlock Grid.Column="1" Text="{Binding Title}" Margin="10,0" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="2" Text="{Binding Time}" Opacity="0.6" FontSize="11" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock x:Name="NoAlerts" Text="No alerts yet. You're all clear." Opacity="0.6" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

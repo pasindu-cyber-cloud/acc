@@ -17,14 +17,8 @@
   <ItemGroup>
     <!-- Modern Fluent (Windows 11) styling for WPF. -->
     <PackageReference Include="WPF-UI" Version="3.0.5" />
-    <!-- MVVM source generators (ObservableObject, RelayCommand). -->
+    <!-- MVVM source generators (available for future view-models). -->
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <!-- Dependency injection / hosting in the app process. -->
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <!-- System-tray icon for WPF. -->
-    <PackageReference Include="H.NotifyIcon.Wpf" Version="2.1.0" />
-    <!-- Charts for the dashboard. -->
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc2" />
   </ItemGroup>
 
 </Project>

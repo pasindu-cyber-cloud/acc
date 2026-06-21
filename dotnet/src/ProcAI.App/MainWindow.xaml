@@ -1,18 +1,49 @@
-<Window x:Class="ProcAI.App.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ProcAI - Endpoint Protection" Height="820" Width="1280"
-        Background="#0F1419">
+<ui:FluentWindow x:Class="ProcAI.App.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:views="clr-namespace:ProcAI.App.Views"
+                 Title="ProcAI - Endpoint Protection"
+                 Width="1280" Height="820" MinWidth="1040" MinHeight="680"
+                 WindowStartupLocation="CenterScreen"
+                 ExtendsContentIntoTitleBar="True"
+                 WindowBackdropType="Mica"
+                 WindowCornerPreference="Round">
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="&#x1F6E1; ProcAI" FontSize="40" FontWeight="Bold"
-                       Foreground="#E6EDF3" HorizontalAlignment="Center"/>
-            <TextBlock Text="Native Windows endpoint protection (.NET 8)"
-                       FontSize="14" Foreground="#8B98A5" Margin="0,8,0,0"
-                       HorizontalAlignment="Center"/>
-            <TextBlock Text="Detection engine ready. The full Fluent dashboard is under construction."
-                       FontSize="12" Foreground="#8B98A5" Margin="0,24,0,0"
-                       HorizontalAlignment="Center"/>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="ProcAI - Endpoint Protection" />
+
+        <ui:NavigationView Grid.Row="1" x:Name="RootNavigation"
+                           PaneDisplayMode="Left" OpenPaneLength="220"
+                           IsBackButtonVisible="Collapsed" IsPaneToggleVisible="True">
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="Overview" TargetPageType="{x:Type views:OverviewPage}" />
+                <ui:NavigationViewItem Content="Live Processes" TargetPageType="{x:Type views:LiveProcessesPage}" />
+                <ui:NavigationViewItem Content="Alerts" TargetPageType="{x:Type views:AlertsPage}" />
+                <ui:NavigationViewItem Content="Process Intelligence" TargetPageType="{x:Type views:IntelligencePage}" />
+                <ui:NavigationViewItem Content="Deep Scan" TargetPageType="{x:Type views:DeepScanPage}" />
+                <ui:NavigationViewItem Content="Forensic Timeline" TargetPageType="{x:Type views:TimelinePage}" />
+                <ui:NavigationViewItem Content="Proc Assistant" TargetPageType="{x:Type views:AssistantPage}" />
+                <ui:NavigationViewItem Content="Reports" TargetPageType="{x:Type views:ReportsPage}" />
+                <ui:NavigationViewItem Content="Settings" TargetPageType="{x:Type views:SettingsPage}" />
+                <ui:NavigationViewItem Content="Protection Health" TargetPageType="{x:Type views:ProtectionHealthPage}" />
+            </ui:NavigationView.MenuItems>
+
+            <ui:NavigationView.PaneFooter>
+                <StackPanel Margin="8,4,8,12">
+                    <Border x:Name="StatusChip" CornerRadius="6" Background="#22FFFFFF" Padding="10,6" Margin="4,4">
+                        <TextBlock x:Name="StatusText" Text="● Stopped" />
+                    </Border>
+                    <ui:Button x:Name="ToggleButton" Content="Start Protection" Appearance="Success"
+                               HorizontalAlignment="Stretch" Margin="4,6" Click="OnToggleProtection" />
+                    <TextBlock Text="v2.0.0  •  privacy-first" Opacity="0.5" FontSize="11"
+                               HorizontalAlignment="Center" Margin="0,4" />
+                </StackPanel>
+            </ui:NavigationView.PaneFooter>
+        </ui:NavigationView>
     </Grid>
-</Window>
+</ui:FluentWindow>

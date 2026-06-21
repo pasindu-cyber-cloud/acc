@@ -13,6 +13,9 @@ public interface ITelemetryCollector
 
     /// <summary>Collect a single process by PID (for deep scan / intelligence view).</summary>
     ProcessSnapshot? CollectOne(int pid);
+
+    /// <summary>Host-level resource usage for the dashboard.</summary>
+    SystemOverview GetSystemOverview();
 }
 
 /// <summary>Host-level resource usage for the dashboard.</summary>
