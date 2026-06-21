@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- ProcAI.App - WPF dashboard with WPF-UI Fluent theme. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>ProcAI.App</RootNamespace>
+    <AssemblyName>ProcAI</AssemblyName>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms> <!-- for NotifyIcon tray support -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProcAI.Core\ProcAI.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Modern Fluent (Windows 11) styling for WPF. -->
+    <PackageReference Include="WPF-UI" Version="3.0.5" />
+    <!-- MVVM source generators (available for future view-models). -->
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+  </ItemGroup>
+
+</Project>

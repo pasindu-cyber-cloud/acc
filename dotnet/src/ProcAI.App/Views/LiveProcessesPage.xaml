@@ -1,0 +1,45 @@
+<Page x:Class="ProcAI.App.Views.LiveProcessesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Live Processes" FontSize="24" FontWeight="Bold" Margin="0,0,0,12" />
+
+        <Grid Grid.Row="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ui:TextBox Grid.Column="0" x:Name="SearchBox" PlaceholderText="Search name / path / user..."
+                        TextChanged="OnSearchChanged" />
+            <ui:Button Grid.Column="1" Content="Refresh" Margin="8,0,0,0" Click="OnRefresh" />
+            <ui:Button Grid.Column="2" Content="Simulate" Margin="8,0,0,0" Click="OnSimulate" />
+        </Grid>
+
+        <DataGrid Grid.Row="2" x:Name="Grid" AutoGenerateColumns="False" IsReadOnly="True"
+                  CanUserSortColumns="True" GridLinesVisibility="Horizontal" HeadersVisibility="Column"
+                  Background="#1A222C" RowBackground="#1A222C" AlternatingRowBackground="#202A36"
+                  BorderThickness="0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="70" />
+                <DataGridTextColumn Header="Process" Binding="{Binding Name}" Width="190" />
+                <DataGridTextColumn Header="User" Binding="{Binding User}" Width="130" />
+                <DataGridTextColumn Header="CPU %" Binding="{Binding Cpu}" Width="70" />
+                <DataGridTextColumn Header="Mem MB" Binding="{Binding MemMb}" Width="80" />
+                <DataGridTextColumn Header="Threads" Binding="{Binding Threads}" Width="70" />
+                <DataGridTextColumn Header="Conns" Binding="{Binding Conns}" Width="60" />
+                <DataGridTextColumn Header="Risk" Binding="{Binding Risk}" Width="60" />
+                <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="90" />
+                <DataGridTextColumn Header="Signed" Binding="{Binding Signed}" Width="70" />
+                <DataGridTextColumn Header="Executable Path" Binding="{Binding Path}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>
