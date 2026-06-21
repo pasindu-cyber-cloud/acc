@@ -1,0 +1,9 @@
+-r requirements.txt
+
+# Development / testing / packaging
+pytest>=7.4
+pytest-cov>=4.1
+ruff>=0.1
+black>=23.0
+mypy>=1.5
+pyinstaller>=6.0
