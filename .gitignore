@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.python-version
+
+# PyInstaller / Inno Setup output
+installer/Output/
+*.spec.bak
+
+# ProcAI local data (never commit user telemetry/models/reports)
+*.db
+*.db-wal
+*.db-shm
+*.joblib
+/data/
+reports/
+logs/
+
+# Tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# OS / editor
+.DS_Store
+Thumbs.db
