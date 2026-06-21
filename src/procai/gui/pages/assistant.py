@@ -7,7 +7,7 @@ import threading
 import customtkinter as ctk
 
 from .. import theme
-from ...assistant import ai_backends
+import procai.assistant.ai_backends as ai_backends
 from ...assistant.explain import explain_detection
 from .base import BasePage
 

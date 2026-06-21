@@ -10,7 +10,12 @@ import time
 import customtkinter as ctk
 
 from .. import theme
-from ... import reports
+from ...reports import (
+    export_alerts_csv,
+    export_alerts_pdf,
+    export_process_history_csv,
+    pdf_available,
+)
 from ...config import PATHS
 from .base import BasePage
 
@@ -56,14 +61,14 @@ class ReportsPage(BasePage):
 
     # ------------------------------------------------------------------ #
     def on_show(self) -> None:
-        self.pdf_btn.configure(state="normal" if reports.pdf_available() else "disabled")
-        if not reports.pdf_available():
+        self.pdf_btn.configure(state="normal" if pdf_available() else "disabled")
+        if not pdf_available():
             self.pdf_btn.configure(text="PDF (install procai[reports])")
         self._list_recent()
 
     def _alerts_csv(self) -> None:
         alerts = self.app.engine.db.get_alerts(limit=10000)
-        path = reports.export_alerts_csv(alerts)
+        path = export_alerts_csv(alerts)
         self._done(path)
 
     def _alerts_pdf(self) -> None:
@@ -74,14 +79,14 @@ class ReportsPage(BasePage):
             "Sensitivity": self.app.settings.sensitivity.value,
         }
         try:
-            path = reports.export_alerts_pdf(alerts, summary=summary)
+            path = export_alerts_pdf(alerts, summary=summary)
             self._done(path)
         except RuntimeError as exc:
             self.status.configure(text=str(exc), text_color=theme.WARNING)
 
     def _history_csv(self) -> None:
         rows = self.app.engine.db.recent_process_history(limit=20000)
-        path = reports.export_process_history_csv(rows)
+        path = export_process_history_csv(rows)
         self._done(path)
 
     def _done(self, path) -> None:

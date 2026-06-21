@@ -191,7 +191,7 @@ class SettingsPage(BasePage):
         self.train_status.configure(text="Training...", text_color=theme.TEXT_MUTED)
 
         def work():
-            from ...core import simulation
+            import procai.core.simulation as simulation
             from ...core.ml import train_and_save
 
             try:
